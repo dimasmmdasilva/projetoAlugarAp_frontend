@@ -16,7 +16,6 @@ interface PropertyDetail {
     name: string;
     email: string;
   };
-  // Em breve: imagens, coordenadas etc.
 }
 
 export default function PropertyDetailPage() {
@@ -51,51 +50,56 @@ export default function PropertyDetailPage() {
   }
 
   return (
-    <div className="p-4 grid md:grid-cols-2 gap-6">
-      {/* Seção da esquerda: imagem + detalhes */}
+    <section className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[60%_40%] gap-6 p-4">
+      {/* Coluna da esquerda: detalhes do imóvel */}
       <div>
-        {/* Imagem principal simulada */}
+        {/* Imagem simulada */}
         <div className="h-64 bg-gray-200 rounded flex items-center justify-center mb-4">
           <span className="text-gray-500">Imagem principal</span>
         </div>
 
-        {/* Título e descrição */}
-        <h2 className="text-2xl font-bold mb-2">{property.title}</h2>
-        <p className="text-sm text-gray-700">{property.description}</p>
+        {/* Título */}
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          {property.title}
+        </h2>
 
-        {/* Informações públicas */}
-        <p className="mt-4 text-sm text-gray-800">
-          Localização: <strong>{property.location}</strong>
-        </p>
+        {/* Seções de informação */}
+        <div className="space-y-4 text-sm text-gray-700">
+          <div>
+            <h3 className="font-semibold">Descrição</h3>
+            <p>{property.description}</p>
+          </div>
 
-        {/* Informações privadas (usuário logado) */}
-        {user.token && (
-          <>
-            <p className="text-sm text-gray-800 mt-1">
-              Preço: R$ {property.price.toFixed(2)}
+          <div>
+            <h3 className="font-semibold">Localização</h3>
+            <p>{property.location}</p>
+          </div>
+
+          {user.token ? (
+            <>
+              <div>
+                <h3 className="font-semibold">Preço</h3>
+                <p>R$ {property.price.toFixed(2)}</p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold">Proprietário</h3>
+                <p>{property.owner.name}</p>
+                <p>{property.owner.email}</p>
+              </div>
+            </>
+          ) : (
+            <p className="text-blue-600 italic">
+              Faça login para visualizar mais informações.
             </p>
-            <div className="mt-4 text-sm text-gray-700 space-y-1">
-              <p>
-                Proprietário: <strong>{property.owner.name}</strong>
-              </p>
-              <p>
-                Contato: <span>{property.owner.email}</span>
-              </p>
-            </div>
-          </>
-        )}
-
-        {!user.token && (
-          <p className="mt-4 text-sm text-blue-600 italic">
-            Faça login para ver mais detalhes sobre o imóvel.
-          </p>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* Seção da direita: mapa simulado */}
-      <div className="bg-gray-100 h-64 rounded flex items-center justify-center">
+      {/* Coluna da direita: mapa (placeholder) */}
+      <div className="h-full bg-gray-100 rounded flex items-center justify-center">
         <span className="text-gray-500">Mapa (Google Maps)</span>
       </div>
-    </div>
+    </section>
   );
 }
