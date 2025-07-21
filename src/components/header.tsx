@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,11 +20,8 @@ type FormData = z.infer<typeof schema>;
 export default function Header() {
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.auth);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
+
+  const { register, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
@@ -38,6 +36,7 @@ export default function Header() {
           token,
           id: payload.id,
           role: payload.role,
+          name: payload.name,
         })
       );
     } catch (err) {
@@ -52,44 +51,55 @@ export default function Header() {
   const handleLogout = () => dispatch(logout());
 
   return (
-    <header className="flex justify-between items-center px-4 py-3 border-b bg-white">
-      <h1 className="text-xl font-bold text-blue-700">AlugarAP</h1>
+    <header className="border-b bg-white py-4 shadow-sm sticky top-0 z-50">
+      <div className="max-w-screen-xl mx-auto flex justify-between items-center px-4">
+        <h1 className="text-xl font-bold text-blue-700">AlugarAP</h1>
 
-      {user.token ? (
-        <div className="flex items-center gap-4 text-sm">
-          <span className="text-gray-700">Logado como: {user.role}</span>
-          <button
-            onClick={handleLogout}
-            className="text-red-600 underline text-sm"
-          >
-            Sair
-          </button>
-        </div>
-      ) : (
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex gap-2 items-center"
-        >
-          <input
-            type="email"
-            placeholder="E-mail"
-            {...register("email")}
-            className="border p-1 rounded text-sm"
-          />
-          <input
-            type="password"
-            placeholder="Senha"
-            {...register("password")}
-            className="border p-1 rounded text-sm"
-          />
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-3 py-1 rounded text-sm"
-          >
-            Entrar
-          </button>
-        </form>
-      )}
+        {user.token ? (
+          <div className="flex items-center gap-4 text-sm">
+            <span className="text-gray-700">Olá, {user.name}</span>
+            <button
+              onClick={handleLogout}
+              className="text-red-600 underline text-sm"
+            >
+              Sair
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex items-center gap-2"
+            >
+              <input
+                type="email"
+                placeholder="E-mail"
+                {...register("email")}
+                className="border p-1 rounded text-sm text-black"
+              />
+              <input
+                type="password"
+                placeholder="Senha"
+                {...register("password")}
+                className="border p-1 rounded text-sm text-black"
+              />
+              <button
+                type="submit"
+                className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-800 transition"
+              >
+                Entrar
+              </button>
+            </form>
+
+            <Link
+              href="/register/escolha"
+              className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-800 transition"
+            >
+              Cadastro
+            </Link>
+          </div>
+        )}
+      </div>
     </header>
   );
 }

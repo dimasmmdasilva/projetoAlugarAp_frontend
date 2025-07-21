@@ -6,12 +6,14 @@ interface AuthState {
   token: string | null;
   role: Role | null;
   id: number | null;
+  name: string | null;
 }
 
 const initialState: AuthState = {
   token: null,
   role: null,
   id: null,
+  name: null,
 };
 
 const authSlice = createSlice({
@@ -20,17 +22,26 @@ const authSlice = createSlice({
   reducers: {
     setCredentials: (
       state,
-      action: PayloadAction<{ token: string; role: Role; id: number }>
+      action: PayloadAction<{
+        token: string;
+        role: Role;
+        id: number;
+        name: string;
+      }>
     ) => {
       state.token = action.payload.token;
       state.role = action.payload.role;
       state.id = action.payload.id;
+      state.name = action.payload.name;
+
       localStorage.setItem("token", action.payload.token);
     },
     logout: (state) => {
       state.token = null;
       state.role = null;
       state.id = null;
+      state.name = null;
+
       localStorage.removeItem("token");
     },
   },
